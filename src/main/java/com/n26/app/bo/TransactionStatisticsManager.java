@@ -15,6 +15,14 @@ import com.n26.app.model.RecordTransactionRequest;
 import com.n26.app.model.TransactionStatisticResponse;
 
 /***************************************************
+ * This is the main worker class, it manages, maintains and validate the transactions. It is using a Concurrent Set for storing transactions. <br>
+ * You can easily swap out the Set for persistent storage.
+ * 
+ * When a transaction is to be saved, it validates that the transaction is not older than 60 seconds epoch UTC time.<br>
+ * Additionally, it automatically evict transactions that are in the Set which are older that 60 seconds via a background scheduler<br/>
+ * , this ensure that only valid and non-expired transactions are kept in memory,<br/>
+ * it also maintains the statistics and keep it current so we can achieve a <br/>
+ * constant time (O)(1) by not having to process all the entries in the list what a get statistics is requested.
  * 
  * @author pgobin
  *

@@ -4,6 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.annotations.ApiModelProperty;
 
+/*******************************************************************
+ * This is a simple DTO which allow us to operate using POJOs for json.
+ * 
+ * This POJO used when requesting statistics via the get/statistics.<br/>
+ * 
+ * By annotating the attributes with API documentation, it allow you to understand the request when viewed in swagger ui.
+ * 
+ * @author pgobin
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransactionStatisticResponse {
 

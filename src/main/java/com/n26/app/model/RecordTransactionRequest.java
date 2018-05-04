@@ -4,12 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import io.swagger.annotations.ApiModelProperty;
 
+/*******************************************************************
+ * This is a simple DTO which allow us to operate using POJOs for json.
+ * 
+ * This POJO is the request for posting a new transaction.<br/>
+ * By annotating the attributes with API documentation, it allow you to understand the request when viewed in swagger ui.
+ * 
+ * @author pgobin
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecordTransactionRequest {
 
 	@ApiModelProperty(value = "Transaction amount", required = true, example = "21.3", allowEmptyValue = false)
 	private double amount;
-	@ApiModelProperty(value = "Transaction timestamp in epoch in mills in UTC timezone (this is not the current timestamp)", required = true, example = "1478192204000", allowEmptyValue = false)
+
+	@ApiModelProperty(value = "Transaction timestamp in epoch in mills in UTC timezone (this is not the current timestamp)", required = true, example = "1525462144552", allowEmptyValue = false)
 	private long timestamp;
 
 	public RecordTransactionRequest()

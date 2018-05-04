@@ -20,8 +20,8 @@ import com.n26.app.model.TransactionStatisticResponse;
 import io.swagger.annotations.ApiOperation;
 
 /*******************************************************************
- * This is our Statistics Controller, it exposes two endpoints with access to our StatisticsManager. All business logic are in the StaticticsManager, hence removing any coupling
- * and encourages code/logic isolation.
+ * This is our Statistics Controller, it exposes two endpoints with access to our StatisticsManager.<br/>
+ * All business logic are in the StaticticsManager, hence removing any coupling and encourages code/logic isolation from the controller.
  * 
  * @author pgobin
  *

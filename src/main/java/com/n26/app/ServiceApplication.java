@@ -12,7 +12,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * It is a spring boot self-hosted, self contained microservice used for tracking transactions<br>
  * and providing statistics via rest endpoints.
  * 
- * Upon application launch via java -jar app.jar,
+ * Upon application launch via java -jar app.jar, all beans will be boot strapped into spring container.
+ * 
+ * Once started, assuming you are using the default port, you can access the swagger ui at <br/>
+ * http://localhost:8088/swagger-ui.html
+ * 
+ * <b>The UI is protected via Spring Security, use user and password to login.</b>
+ * 
  * 
  * @author pgobin
  *
@@ -22,6 +28,10 @@ public class ServiceApplication {
 
 	private static final Logger log = LogManager.getLogger(ServiceApplication.class);
 
+	/***************************************************************8
+	 * The main entry point that boot strapped this service 
+	 * @param args
+	 */
 	public static void main(String[] args)
 	{
 		log.info("Starting N26Test service...");
@@ -29,6 +39,5 @@ public class ServiceApplication {
 		Instant instant = Instant.now();
 		log.info(instant.toEpochMilli());
 		log.info("*** Successfully started N26Test service at " + instant.toString() + " UTC");
-
 	}
 }
