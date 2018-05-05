@@ -19,9 +19,15 @@ import com.n26.app.controller.StatisticsController;
 import com.n26.app.model.RecordTransactionRequest;
 import com.n26.app.model.TransactionStatisticResponse;
 
+/********************************************************
+ * Test bed used for testing our service. These test cases will be executed during a maven install.
+ * 
+ * @author pgobin
+ *
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-// add this annotation to run the test cases in method naming order
+// This annotation allow our test cases to run be method naming alphabetical order
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ServiceApplicationTests {
 
@@ -30,7 +36,7 @@ public class ServiceApplicationTests {
 	private StatisticsController _statisticsController;
 
 	/************************************************************
-	 * Helper method to get a dummy HTTP Header used for the invoking the rest endpoints.
+	 * Helper method to get a dummy HTTP Header to use for invoking our rest endpoints.
 	 * 
 	 * @return
 	 *************************************************************/
@@ -44,10 +50,10 @@ public class ServiceApplicationTests {
 
 	/************************************************************
 	 * Usecase: <br/>
-	 * Request statistics where none is available
+	 * Request statistics on an empty record set.
 	 * 
 	 * Result:<br/>
-	 * Returns a 204 (no-content) is returned.
+	 * Returns a 204 (no-content).
 	 */
 	@Test
 	public void aStatistics_noContentAvailable()
@@ -75,10 +81,10 @@ public class ServiceApplicationTests {
 
 	/************************************************************
 	 * Usecase: <br/>
-	 * Test adding a transactions that are valid, within 60 seconds.
+	 * Test adding transactions that are valid. Valid transactions are transactions that are within 60 seconds.
 	 * 
 	 * Result:<br/>
-	 * Returns a json statistics payload. If no statistics is available, a 204 (no-content) is returned
+	 * Returns a json statistics payload object. If no statistics data is available, a 204 (no-content) is returned.
 	 */
 	@Test
 	public void cStatistics()

@@ -39,8 +39,8 @@ public class TransactionStatisticsManager {
 	// Create a concurrent, thread safe, high performance set used for storing transactions
 	private static final Set<RecordTransactionRequest> _transactions = ConcurrentHashMap.newKeySet(100);
 
-	// Use a single TransactionStatistic ledger for keeping track of the statistics. This allow us to maintain a single recorder which provides a constant time per (O(1))
-	// requirement
+	// Use a single TransactionStatistic object for keeping track of the statistics.
+	// This allow us to maintain a single recorder which provides a constant time per (O(1)) requirement
 	private static final TransactionStatisticResponse _runningStatistics = new TransactionStatisticResponse();
 
 	/************************************************
@@ -72,15 +72,12 @@ public class TransactionStatisticsManager {
 		log.warn("Cannot record transaction because the transaction timestamp [" + transactionRequest.getTimestamp() + "] is older than 60 seconds." + System.lineSeparator() + "Current epoch is "
 			+ Instant.now().toEpochMilli());
 		return false;
-
 	}
 
 	/******************************************************
 	 * Update the singleton _runningStatistics object to achieve (O(1).<br>
 	 * This allows the getTransactionStatistics() method to return the single object without having to perform calculations<br>
 	 * on the list of transactions when requested.
-	 * 
-	 * 
 	 */
 	private void updateTransactionStatisticsForO1()
 	{
@@ -88,11 +85,12 @@ public class TransactionStatisticsManager {
 		{
 			return;
 		}
-		// synchronized block around the _runningStatistics object to avoid deadlock
+		// synchronized block around the _runningStatistics object to avoid deadlock while we update the statistics.
 		synchronized (_runningStatistics)
 		{
 			long timeStampMillis60SecondsInthePast = Instant.now().minusSeconds(_validTransactionTimeInSeconds).toEpochMilli();
-			// remove transactions that are older than 60 seconds from the _transactions repository to conserver resources and to keep only valid transactions.
+			// remove transactions that are older than 60 seconds from the _transactions repository to conserver resources
+			// and to keep only valid transactions.
 			_transactions.removeIf(x -> x.getTimestamp() < timeStampMillis60SecondsInthePast);
 			DoubleSummaryStatistics stats = _transactions.stream().mapToDouble((x) -> x.getAmount()).summaryStatistics();
 			log.info(stats);
@@ -103,7 +101,7 @@ public class TransactionStatisticsManager {
 			_runningStatistics.setSum(stats.getSum());
 			if (stats.getCount() < 1)
 			{
-				log.info("All transactions expired");
+				log.info("All transactions expired!");
 			}
 		}
 	}
@@ -134,7 +132,8 @@ public class TransactionStatisticsManager {
 	/****************************************************
 	 * How do we evict expired transactions from the _transaction set?<br>
 	 * This cleanup scheduler allows us to remove expired transactions and only keep transactions that are 60 seconds or less.<br>
-	 * It also keeps the statistics report current and allows the getTransactionStatistics() method to quickly return, in a time constant manner the transaction statistics.
+	 * It also keeps the statistics report current and allows the getTransactionStatistics()<br/>
+	 * method to quickly return, in a time constant manner, the transaction statistics.
 	 */
 	@Scheduled(fixedRate = 1000, initialDelay = 5000)
 	private void maintainStatisticsForO1()
