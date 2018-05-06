@@ -72,7 +72,7 @@ public class TransactionStatisticsManager {
 			// get the timestamp of now minus 60 seconds.
 			Instant instant = Instant.now().minusSeconds(_validTransactionTimeInSeconds);
 			long timeStampMillis60SecondsInthePast = instant.toEpochMilli();
-			// verify that the transaction is withing 60 seconds
+			// verify that the transaction is within 60 seconds
 			if (transactionRequest.getTimestamp() >= timeStampMillis60SecondsInthePast)
 			{
 				_transactions.add(transactionRequest);
