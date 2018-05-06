@@ -55,23 +55,38 @@ public class TransactionStatisticsManager {
 	 */
 	public boolean recordTransaction(RecordTransactionRequest transactionRequest)
 	{
-		if (transactionRequest == null)
+		try
 		{
-			log.error("Cannot record transaction. The transaction to recorde is null");
+			if (transactionRequest == null)
+			{
+				log.error("Cannot record transaction. The transaction to recorde is null");
+				return false;
+			}
+			// verify that the transaction timestamp is not in the future
+			long now = Instant.now().toEpochMilli();
+			if (transactionRequest.getTimestamp() > now)
+			{
+				log.error("Transaction ignored, you cannot add a transaction that is in the future.");
+				return false;
+			}
+			// get the timestamp of now minus 60 seconds.
+			Instant instant = Instant.now().minusSeconds(_validTransactionTimeInSeconds);
+			long timeStampMillis60SecondsInthePast = instant.toEpochMilli();
+			// verify that the transaction is withing 60 seconds
+			if (transactionRequest.getTimestamp() >= timeStampMillis60SecondsInthePast)
+			{
+				_transactions.add(transactionRequest);
+				updateTransactionStatisticsForO1();
+				return true;
+			}
+			log.warn("Cannot record transaction because the transaction timestamp [" + transactionRequest.getTimestamp() + "] is older than 60 seconds." + System.lineSeparator() + "Current epoch is "
+				+ Instant.now().toEpochMilli());
+			return false;
+		} catch (Exception ex)
+		{
+			log.error("An error occurred trying to add transaction " + transactionRequest.toString());
 			return false;
 		}
-		// get the timestamp of now minus 60 seconds.
-		Instant instant = Instant.now().minusSeconds(_validTransactionTimeInSeconds);
-		long timeStampMillis60SecondsInthePast = instant.toEpochMilli();
-		if (transactionRequest.getTimestamp() >= timeStampMillis60SecondsInthePast)
-		{
-			_transactions.add(transactionRequest);
-			updateTransactionStatisticsForO1();
-			return true;
-		}
-		log.warn("Cannot record transaction because the transaction timestamp [" + transactionRequest.getTimestamp() + "] is older than 60 seconds." + System.lineSeparator() + "Current epoch is "
-			+ Instant.now().toEpochMilli());
-		return false;
 	}
 
 	/******************************************************

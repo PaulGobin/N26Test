@@ -72,4 +72,15 @@ public class RecordTransactionRequest {
 		this.timestamp = timestamp;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString()
+	{
+		return "Transaction amount = " + getAmount() + ", Transaction timestamp = " + getTimestamp();
+	}
+
 }
