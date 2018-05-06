@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,8 @@ import com.n26.app.model.TransactionStatisticResponse;
 // This annotation allow our test cases to run be method naming alphabetical order
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ServiceApplicationTests {
+
+	private static final Logger log = LogManager.getLogger(ServiceApplicationTests.class);
 
 	// Inject the API Controller
 	@Autowired
@@ -58,6 +62,7 @@ public class ServiceApplicationTests {
 	@Test
 	public void aStatistics_noContentAvailable()
 	{
+		log.info("**** Testing requesting a transaction where the transaction repository is empty ****.");
 		HttpHeaders dummyHeaders = getHttpHeaders();
 		ResponseEntity<TransactionStatisticResponse> result = _statisticsController.statistics(dummyHeaders);
 		assertTrue(result.getStatusCode() == HttpStatus.NO_CONTENT);
@@ -73,6 +78,7 @@ public class ServiceApplicationTests {
 	@Test
 	public void bAddTransactionOlderThan60Seconds()
 	{
+		log.info("**** Testing adding a transaction where the transaction is older that 30 seconds ****.");
 		HttpHeaders dummyHeaders = getHttpHeaders();
 		long timestamp = Instant.now().minusSeconds(80).toEpochMilli();
 		ResponseEntity<?> resp = _statisticsController.transactions(dummyHeaders, new RecordTransactionRequest(12, timestamp));
@@ -90,6 +96,7 @@ public class ServiceApplicationTests {
 	public void cStatistics()
 	{
 
+		log.info("**** Testing requesting statistics ****.");
 		HttpHeaders dummyHeaders = getHttpHeaders();
 		long timestamp = Instant.now().toEpochMilli();
 		_statisticsController.transactions(dummyHeaders, new RecordTransactionRequest(12, timestamp));
@@ -103,6 +110,23 @@ public class ServiceApplicationTests {
 		assertTrue(result.getAvg() == 14.95);
 		assertTrue(result.getMin() == 12);
 		assertTrue(result.getMax() == 22.50);
+	}
+
+	/************************************************************
+	 * Usecase: <br/>
+	 * Test adding a future transaction.
+	 * 
+	 * Result:<br/>
+	 * Returns 204 (no-content). Cannot add a transaction that is in the future.
+	 */
+	@Test
+	public void dAddAFutureTransaction()
+	{
+		log.info("**** Testing adding a transaction where the transaction is in the future ****.");
+		HttpHeaders dummyHeaders = getHttpHeaders();
+		long timestamp = Instant.now().plusMillis(1000).toEpochMilli();
+		ResponseEntity<?> resp = _statisticsController.transactions(dummyHeaders, new RecordTransactionRequest(12.25, timestamp));
+		assertTrue(resp.getStatusCode() == HttpStatus.NO_CONTENT);
 	}
 
 }
