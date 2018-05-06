@@ -28,8 +28,9 @@ public class ServiceApplication {
 
 	private static final Logger log = LogManager.getLogger(ServiceApplication.class);
 
-	/***************************************************************8
-	 * The main entry point that boot strapped this service 
+	/***************************************************************
+	 * 8 The main entry point that boot strapped this service
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args)
@@ -39,12 +40,5 @@ public class ServiceApplication {
 		Instant instant = Instant.now();
 		log.info(instant.toEpochMilli());
 		log.info("*** Successfully started N26Test service at " + instant.toString() + " UTC");
-		
-		
-		long inthFuture = Instant.ofEpochMilli(Instant.now().plusMillis(0).toEpochMilli()).toEpochMilli();
-		long now = Instant.now().toEpochMilli();
-		if(inthFuture > now) {
-			System.out.println("Time cannot be in the future");
-		}
 	}
 }
